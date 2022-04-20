@@ -1,0 +1,37 @@
+﻿ <div id="errorMessage"></div>
+ @{ var data = @Html.Raw(ViewBag.Message);
+        var fname = @Html.Raw(ViewBag.DownloadFileName);}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Html.Raw(@data)',
+            method: "GET",
+            xhrFields: {
+                responseType: "blob"
+            },
+            success: function (data) {
+                try {
+
+
+                    var a = document.createElement("a");
+                    var url = window.URL.createObjectURL(data);
+                    a.href = url;
+                    a.download = "@Html.Raw(@fname)";;
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    window.close();
+                }
+                catch (e) {
+                    
+                    $("#errorMessage").text(data);
+
+                }
+            }
+        });
+    });
+
+
+    </script>
